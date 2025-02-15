@@ -14,7 +14,7 @@ export const UseLogin = ()=> {
         setError(null)
         setLoading(false)
 
-        const res = await fetch("http://localhost:4000/api/user/login", {
+        const res = await fetch("https://workouts-auth-backend.onrender.com/", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(email, password)

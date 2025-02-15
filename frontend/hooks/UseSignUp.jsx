@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
         setLoading(true);
         setError(null);
         
-        const res = await fetch("http://localhost:4000/api/user/signup", {
+        const res = await fetch("https://workouts-auth-backend.onrender.com/", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(email, password)

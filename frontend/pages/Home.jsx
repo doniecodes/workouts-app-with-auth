@@ -14,7 +14,7 @@ const Home = () => {
   // fetching data
   React.useEffect(() => {
     const fetchWorkouts = async () => {
-      const response = await fetch('http://localhost:4000/api/workouts', {
+      const response = await fetch('https://workouts-auth-backend.onrender.com/api/user/login/api/workouts', {
           headers: {
             "Authorization": `Bearer ${token}`
           }

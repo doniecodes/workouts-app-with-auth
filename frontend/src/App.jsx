@@ -3,7 +3,7 @@ import Home from "../pages/Home"
 import MainLayout from "../src/components/MainLayout"
 import Login, { loader as loginLoader } from "../pages/Login"
 import Signup from "../pages/Signup"
-import { authRequired, userAuthorized } from "../utils/Utils"
+import { authRequired, userAuthorized } from "../utils/utils"
 
 
 

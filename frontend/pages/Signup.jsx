@@ -1,42 +1,48 @@
-import { React, useState } from "react";
-import { useAuthContext } from "../hooks/useAuthContext"
-import { UseSignup } from "../hooks/UseSignUp";
+import React from 'react'
+import FormsHook from '../hooks/FormsHook';
+import { authActivated } from '../utils/authActivated';
 
+// Loader
+export const loader = async ({ request })=> {
+  const auth = await authActivated(request);
+  return auth;
+}
 
 const Signup = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const { signup, error, loading } = UseSignup();
+  // States
+  const { user, error, signup, status } = FormsHook();
 
-
-    const handleSubmit = async (e)=> {
+  // Login
+  const handleSignup = async (e)=> {
     e.preventDefault();
-    await signup({ email, password })
-    }
-        
-        
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    await signup({ email, password });
+  }
+
 
   return (
     <>
-    <form action="" onSubmit={handleSubmit} className="signup">
-        <h3>Sign up</h3>
+    <div className="container">
+      <div className="form-wrapper">
+        <h1>Sign Up</h1>
+        <form action="" className="form-login" onSubmit={handleSignup}>
+          <div className="form-group">
+            <label htmlFor="email">Email address:</label>
+            <input type="text" id="email" name="email" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input type="password" id="password" name="password" />
+          </div>
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" name='email'
-        id="email"
-        value={email}
-        onChange={(e)=> setEmail(e.target.value)}/>
+          { error && <div className="form-error">{ error }</div> }
 
-        <label htmlFor="password">Password:</label>
-        <input type="password" name='password'
-        id="password"
-        value={password}
-        onChange={(e)=> setPassword(e.target.value)}/>
-
-        <button>Sign Up</button>
-
-        { error && <div className="form-error">{error}</div> }
-    </form>
+          <button disabled={ status === "submitting" }>{ status === "idle" ? "Sign Up" : "Signing Up" }</button>
+        </form>
+      </div>
+    </div>
     </>
   )
 }

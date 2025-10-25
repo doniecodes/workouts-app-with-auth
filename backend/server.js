@@ -1,44 +1,31 @@
-const mongoose = require("mongoose");
-require('dotenv').config()
+const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const workoutRoutes = require("./routes/workouts");
+const mongoose = require("mongoose");
+const workoutRoutes = require("./routes/workoutRoutes");
 const userRoutes = require("./routes/userRoutes");
 
-const express = require('express')
-
-// express app
-const app = express()
-
-// cors congifuration
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "DELETE", "PATCH", "PUT"]
-}))
+const app = express();
 
 // middleware
-app.use(express.json());
-app.use(cookieParser());
-app.use((req, res, next) => {
-  console.log(req.path, req.method)
-  next()
-})
+app.use(express.json())
+app.use(cors({
+    target: "http://localhost:3000",
+    methods: [ "GET", "POST", "DELETE", "PUT", "PATCH" ]
+}))
 
-
-// workout routes
+// Workout Routes
 app.use("/api/workouts", workoutRoutes);
-// user routes
+
+// User Routes
 app.use("/api/user", userRoutes);
 
-const PORT = process.env.PORT || 4000
-// Connect to db
+const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGO_URI)
 .then((result)=> {
-  // listen for requests
-  app.listen(process.env.PORT, () => {
-  console.log(`Connected to db & listening on port ${PORT}`)
+    app.listen(PORT, ()=> {
+    console.log("Listening on PORT" + " " + PORT);
 })
-})
-.then((err)=> {
-  console.log(err)
+}).catch((err)=> {
+    console.log(err);
 })

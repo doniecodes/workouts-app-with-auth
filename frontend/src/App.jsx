@@ -1,31 +1,32 @@
-import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
-import Home from "../pages/Home"
-import MainLayout from "../src/components/MainLayout"
-import Login, { loader as loginLoader } from "../pages/Login"
-import Signup from "../pages/Signup"
-import { authRequired, userAuthorized } from "../utils/utils"
+import React from 'react';
+import { Route, createBrowserRouter,
+  createRoutesFromElements, RouterProvider } from "react-router-dom";
 
+// Pages
+import Home, { loader as homeLoader } from "../pages/Home";
+import NotFoundPage from "../pages/NotFoundPage";
+import Login, { loader as loginLoader } from "../pages/Login";
+import Signup, { loader as SignupLoader } from "../pages/Signup";
+import MainOutlet from "../components/MainOutlet";
 
-
+// Router
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-    <Route index element={<Home/>}
-    loader={authRequired} />
+    <Route pat="/" element={<MainOutlet />}>
+      <Route index element={<Home />} loader={homeLoader} />
 
-    <Route path="/login" element={<Login/>}
-    loader={loginLoader} />
+      <Route path="login" element={<Login />} loader={loginLoader} />
+      <Route path="signup" element={<Signup />} loader={SignupLoader}/>
 
-    <Route path="/signup" element={<Signup/>}/>
+      <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
 )
 
-
-function App() {
+const App = () => {
   return (
     <>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
     </>
   )
 }

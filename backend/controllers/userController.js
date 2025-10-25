@@ -1,44 +1,37 @@
-const User =  require("../models/userModel");
+const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 
 
-// Create Token
-const maxage = 60 * 60 * 24
-const createToken = (id)=> {
-    return jwt.sign({id}, process.env.JWTSECRET)
+// Create token
+const secret = process.env.SECRET;
+const createToken = (_id)=> {
+    return jwt.sign({ _id }, secret, { expiresIn: "3d" });
 }
 
-// login controller
+// Login
 const loginUser = async (req, res)=> {
     const { email, password } = req.body;
 
-    try{
-        const user = await User.login(email, password);
+    try {
+        const user = await User.login(email, password)
         const token = createToken(user._id);
-        res.cookie("jwt", token, { httpOnly: true, maxAge: maxage * 1000});
-        res.header('Authorization', 'Bearer ' + token)
-        res.status(200).json({email, token});
-    } catch (err) {
-        res.status(404).json({err: err.message});
+        res.status(200).json({ email, token });
+    } catch (error) {
+        res.status(404).json({ error: error.message })
     }
 }
 
-// signup controller
+// Signup
 const signupUser = async (req, res)=> {
-    const { email, password } = req.body
+    const { email, password } = req.body;
 
-    try{
-        const user = await User.signup(email, password);
-        const token = createToken(user._id);
-        res.cookie("jwt",token , { httpOnly: true, maxAge: maxage * 1000});
-        res.header('Authorization', 'Bearer ' + token)
-        res.status(200).json({email, token});
-    } catch (err) {
-        res.status(404).json({err: err.message});
+    try {
+        const user = await User.signup(email, password)
+        const token= createToken( user._id );
+        res.status(200).json({ email, token });
+    } catch (error) {
+        res.status(404).json({ error: error.message });
     }
 }
 
-module.exports = {
-    signupUser,
-    loginUser
-}
+module.exports = { loginUser, signupUser }

@@ -1,53 +1,61 @@
-import React, { useState } from 'react'
-import { useAuthContext } from "../hooks/useAuthContext"
-import { useLoaderData, useNavigate } from 'react-router-dom'
-import { UseLogin } from '../hooks/UseLogin'
-import { authRequired } from '../utils/utils'
+import React from 'react'
+import FormsHook from '../hooks/FormsHook';
+import { useLoaderData } from 'react-router-dom';
+import { authActivated } from '../utils/authActivated';
 
-export const loader = async ({request}) => {
-  await authRequired(request);
-  const message = new URL(request.url).searchParams.get("message");
-  return message
+// Loader
+export const loader = async ({ request })=> {
+  // Block logged in user from accessing the login page
+  const user = JSON.parse(localStorage.getItem("USER"));
+  if(user){
+    const auth = await authActivated(request);
+    return auth;
+  }
+
+  const url = new URL(request.url).searchParams.get("message");
+  return { url };
 }
 
-
 const Login = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const { login, error, loading } = UseLogin();
 
-    const loaderMsg = useLoaderData();
-    
+  // States
+  const { error, login, status } = FormsHook();
 
+  // loader data
+  const { url:mssg } = useLoaderData();
 
-    const handleSubmit = async (e)=> {
-        e.preventDefault();
-        await login({ email, password });
-    }
+  // Login
+  const handleLogin = async (e)=> {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    await login({ email, password });
+  }
+
 
   return (
     <>
-    <form action="" onSubmit={handleSubmit} className="login">
+    <div className="container">
+      <div className="form-wrapper">
+        { mssg !== undefined && <h2 className='error-url'>{ mssg }</h2> }
+        <h1>Log In</h1>
+        <form action="" className="form-login" onSubmit={handleLogin}>
+          <div className="form-group">
+            <label htmlFor="email">Email address:</label>
+            <input type="text" id="email" name="email" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input type="password" id="password" name="password" />
+          </div>
 
-        { loaderMsg && <h3 className='auth-login-error'>{loaderMsg}</h3> }
+          { error && <div className="form-error">{ error }</div> }
 
-        <h3>Login</h3>
-
-        <label htmlFor="email">Email:</label>
-        <input type="email" name='email'
-        id="email"
-        value={email}
-        onChange={(e)=> setEmail(e.target.value)}/>
-
-        <label htmlFor="password">Password:</label>
-        <input type="password" name='password'
-        id="password"
-        value={password}
-        onChange={(e)=> setPassword(e.target.value)}/>
-
-        <button>Login</button>
-        { error && <div className="form-error">{error}</div> }
-    </form>
+          <button disabled={ status === "submitting" }>{ status === "idle" ? "Log in" : "Logging in" }</button>
+        </form>
+      </div>
+    </div>
     </>
   )
 }

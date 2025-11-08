@@ -52,7 +52,7 @@ const Login = () => {
 
           { error && <div className="form-error">{ error }</div> }
 
-          <button disabled={ status === "submitting" }>{ status === "idle" ? "Log in" : "Logging in" }</button>
+          <button>Log In</button>
         </form>
       </div>
     </div>

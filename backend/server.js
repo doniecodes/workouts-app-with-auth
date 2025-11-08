@@ -10,7 +10,7 @@ const app = express();
 // middleware
 app.use(express.json())
 app.use(cors({
-    target: "http://localhost:3000",
+    target: "doniecode-workouts-app.netlify.app",
     methods: [ "GET", "POST", "DELETE", "PUT", "PATCH" ]
 }))
 

@@ -16,11 +16,14 @@ const WorkoutsHook = () => {
     const { dispatch, workouts } = UseWorkoutsContext();
     const { user } = UseUserContext();
 
+    // api
+    const api = import.meta.env.VITE_API;
+
 
     // Get all workouts
 const getWorkouts = async (id)=> {
     setLoading(true)
-    const url = id ? `http://localhost:4000/api/workouts/${id}` : "http://localhost:4000/api/workouts";
+    const url = id ? `${api}/api/workouts/${id}` : `${api}/api/workouts`;
     const res = await fetch(url, {
         headers: {
             "Authorization": `Bearer ${user.token}`
@@ -54,7 +57,7 @@ const createWorkout = async (json)=> {
 
     setStatus("submitting");
     
-    const res = await fetch("http://localhost:4000/api/workouts", {
+    const res = await fetch(`${api}/api/workouts`, {
         method: "POST",
         headers: { "Content-Type": "application/json",
             "Authorization": `Bearer ${user.token}`
@@ -83,7 +86,7 @@ const deleteWorkout = async (id)=> {
         return;
     }
 
-    const res = await fetch(`http://localhost:4000/api/workouts/${id}`, {
+    const res = await fetch(`${api}/api/workouts/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${user.token}` }
     })

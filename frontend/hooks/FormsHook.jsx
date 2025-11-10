@@ -11,11 +11,13 @@ const FormsHook = () => {
     const navigate = useNavigate();
     const { user, dispatch } = UseUserContext();
     const { dispatch: dispatchWorkouts} = UseWorkoutsContext();
+    // API's
+    const api = import.meta.env.VITE_API;
 
     // login
     const login = async (email, password)=> {
         setStatus("submitting");
-        const res = await fetch("http://localhost:4000/api/user/login", {
+        const res = await fetch(`${api}/api/user/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json",
                 "Authorization": `Bearer ${user && user.token}`
@@ -43,7 +45,7 @@ const FormsHook = () => {
     // signup
     const signup = async (email, password)=> {
         setStatus("submitting");
-        const res = await fetch("http://localhost:4000/api/user/signup", {
+        const res = await fetch(`${api}/api/user/signup`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(email, password)

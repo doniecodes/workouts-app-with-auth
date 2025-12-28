@@ -10,7 +10,7 @@ const app = express();
 // middleware
 app.use(express.json())
 app.use(cors({
-    target: "https://workouts-auth-frontend.onrender.com/",
+    target: "https://doniecode-workouts-app.netlify.app/",
     methods: [ "GET", "POST", "DELETE", "PUT", "PATCH" ]
 }))
 
